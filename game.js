@@ -1,11 +1,19 @@
 let canvas= document.querySelector("#myCanvas");
 let ctx= canvas.getContext("2d");
+//COLLISION VAR
 let x = canvas.width/2;
 let y = canvas.height-30;
 let dx = 2;
 let dy = -2;
+//BALL VAR
 let ballRadius = 10;
 let ballColor = "black"
+//PADDLE VAR
+let paddleHeight = 15;
+let paddleWidth = 80;
+let paddleX = (canvas.width-paddleWidth)/2;
+let rightPressed = false;
+let leftPressed = false;
 //FUNCTIONS
 
 //randomizer functions
@@ -33,11 +41,19 @@ ctx.fill();
 ctx.closePath();
 }
 
+function drawPaddle(){
+ctx.beginPath();
+ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+ctx.fillStyle = "#0095DD";
+ctx.fill();
+ctx.closePath();
+}
+
 function draw (){
 ctx.clearRect(0, 0, canvas.width, canvas.height);
-//this makes it a circle instead of a line^
-drawSq();
+//this makes it a circle instead of a line by clearing the canvas every 10 ms^
 drawBall(ballColor);
+drawPaddle();
 x += dx;
 y += dy;
 //border collision
@@ -45,6 +61,20 @@ if (y + dy < ballRadius || y + dy > canvas.height-ballRadius)
 {dy = -dy; ballColor=getRandomColor();};
 if (x + dx < ballRadius || x + dx > canvas.width-ballRadius)
 {dx = -dx; ballColor=getRandomColor();};
+//KEY PARAMETERS
+if (rightPressed && paddleX < canvas.width-paddleWidth){paddleX += 4;};
+if (leftPressed && paddleX > 0){paddleX -= 4;};
+}
+//KEY HANDLERS
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+function keyDownHandler(e){
+  if (e.keyCode == 39){rightPressed = true;}
+  else if (e.keyCode == 37){leftPressed = true;}
+}
+function keyUpHandler(e){
+  if(e.keyCode == 39){rightPressed = false;}
+  else if (e.keyCode == 37){leftPressed = false;}
 }
 setInterval(draw, 10);
 
