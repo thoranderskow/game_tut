@@ -54,16 +54,28 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
 //this makes it a circle instead of a line by clearing the canvas every 10 ms^
 drawBall(ballColor);
 drawPaddle();
-x += dx;
-y += dy;
-//border collision
-if (y + dy < ballRadius || y + dy > canvas.height-ballRadius)
-{dy = -dy; ballColor=getRandomColor();};
-if (x + dx < ballRadius || x + dx > canvas.width-ballRadius)
-{dx = -dx; ballColor=getRandomColor();};
+//top border collision
+if (y + dy < ballRadius){
+  dy = -dy; ballColor=getRandomColor();
+}
+else if (y + dy > canvas.height-paddleHeight-ballRadius){
+  if (x > paddleX && x < paddleX + paddleWidth){
+    if (dy < 5){ // keeps speed of ball under 5 pixels per frame
+    dy = -(dy + 1);
+    } else {dy = -dy;}
+    ballColor=getRandomColor();
+  } else if(y + dy > canvas.height-ballRadius){
+  alert("GAME OVER");
+  document.location.reload();}
+} //sides border collision
+if (x + dx < ballRadius || x + dx > canvas.width-ballRadius){
+  dx = -dx; ballColor=getRandomColor();
+};
 //KEY PARAMETERS
 if (rightPressed && paddleX < canvas.width-paddleWidth){paddleX += 4;};
 if (leftPressed && paddleX > 0){paddleX -= 4;};
+x += dx;
+y += dy;
 }
 //KEY HANDLERS
 document.addEventListener("keydown", keyDownHandler, false);
