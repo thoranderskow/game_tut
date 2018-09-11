@@ -14,7 +14,23 @@ let paddleWidth = 80;
 let paddleX = (canvas.width-paddleWidth)/2;
 let rightPressed = false;
 let leftPressed = false;
-//FUNCTIONS
+//BRICK OBJ
+var brickRowCount = 3;
+var brickColumnCount = 5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+
+var bricks=[];
+for(let c = 0;c<brickColumnCount; c++){
+    bricks[c] = [];
+    for(let r = 0;r<brickRowCount; r++){
+        bricks[c][r] = {x:0, y:0};
+    }
+}
+
 
 //randomizer functions
 function getRandomNumber(){return Math.floor(Math.random() * 255);}
@@ -54,13 +70,14 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
 //this makes it a circle instead of a line by clearing the canvas every 10 ms^
 drawBall(ballColor);
 drawPaddle();
+drawBricks();
 //top border collision
 if (y + dy < ballRadius){
   dy = -dy; ballColor=getRandomColor();
 }
 else if (y + dy > canvas.height-paddleHeight-ballRadius){
   if (x > paddleX && x < paddleX + paddleWidth){
-    if (dy < 5){ // keeps speed of ball under 5 pixels per frame
+    if (dy < 7){ // keeps speed of ball under 7 pixels per frame
     dy = -(dy + 1);
     } else {dy = -dy;}
     ballColor=getRandomColor();
